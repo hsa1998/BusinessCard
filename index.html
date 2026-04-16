@@ -434,7 +434,9 @@
     btn.appendChild(ring);
     setTimeout(() => ring.remove(), 600);
 
-    // Build and download vCard
+    // Build vCard and open it — no download attribute so iOS/Android
+    // intercept the text/vcard MIME type and open the native contacts prompt.
+    // Desktop browsers will fall back to downloading the .vcf file.
     const vcf = [
       'BEGIN:VCARD',
       'VERSION:3.0',
@@ -452,9 +454,11 @@
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
     a.href     = url;
-    a.download = 'Haseeb-Afridi.vcf';
+    // No a.download — lets the browser/OS handle the MIME type natively
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 </script>
 
