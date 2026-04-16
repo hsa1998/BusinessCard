@@ -9,13 +9,13 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --accent:    #00e87a;
-      --bg:        #060c09;
-      --card-bg:   #0b1812;
-      --border:    #0f2e1e;
-      --text:      #d6ede2;
-      --muted:     #3d6e55;
-      --muted-lt:  #5a9070;
+      --accent:   #00e87a;
+      --bg:       #060c09;
+      --card-bg:  #0b1812;
+      --border:   #0f2e1e;
+      --text:     #d6ede2;
+      --muted:    #3d6e55;
+      --muted-lt: #5a9070;
     }
 
     @keyframes fadeUp {
@@ -29,6 +29,10 @@
     @keyframes scanline {
       0%   { top: -10%; }
       100% { top: 110%; }
+    }
+    @keyframes ripple {
+      0%   { transform: scale(1);   opacity: 0.6; }
+      100% { transform: scale(2.2); opacity: 0; }
     }
 
     body {
@@ -78,7 +82,6 @@
       background: linear-gradient(180deg, rgba(0,232,122,0.03) 0%, transparent 60%);
       pointer-events: none;
     }
-
     .status {
       display: flex;
       align-items: center;
@@ -98,7 +101,6 @@
       letter-spacing: 2px;
       text-transform: uppercase;
     }
-
     .name {
       font-family: 'Syne', sans-serif;
       font-size: 30px;
@@ -128,7 +130,7 @@
     .view { display: none; }
     .view.active { display: block; animation: fadeUp 0.3s ease both; }
 
-    /* Card view */
+    /* ── Card view ── */
     .body { padding: 22px 28px 20px; }
 
     .section-label {
@@ -139,7 +141,6 @@
       text-transform: uppercase;
       margin-bottom: 10px;
     }
-
     .services {
       display: flex;
       flex-wrap: wrap;
@@ -162,7 +163,6 @@
       background: rgba(0,232,122,0.1);
       border-color: rgba(0,232,122,0.28);
     }
-    .tag svg { color: var(--accent); vertical-align: middle; }
 
     .contacts { display: flex; flex-direction: column; gap: 10px; }
     .contact-link {
@@ -172,7 +172,6 @@
       color: var(--text);
       font-size: 13px;
       text-decoration: none;
-      transition: color 0.2s;
     }
     .contact-link:hover .contact-label { color: var(--accent); }
     .contact-icon {
@@ -193,7 +192,42 @@
     }
     .contact-label { transition: color 0.2s; }
 
-    /* QR view */
+    /* ── Add to Contacts button ── */
+    .save-btn-wrap {
+      padding: 18px 28px 4px;
+    }
+    .save-btn {
+      width: 100%;
+      padding: 11px 16px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      border-radius: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .save-btn:hover  { opacity: 0.88; }
+    .save-btn:active { transform: scale(0.98); }
+    .save-btn .ripple-ring {
+      position: absolute;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(6,12,9,0.35);
+      animation: ripple 0.55s ease-out forwards;
+    }
+
+    /* ── QR view ── */
     .qr-view {
       padding: 26px 28px 22px;
       display: flex;
@@ -339,23 +373,31 @@
         </a>
       </div>
     </div>
+
+    <!-- Add to Contacts button -->
+    <div class="save-btn-wrap">
+      <button class="save-btn" onclick="saveContact(event)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+        Add to Contacts
+      </button>
+    </div>
   </div>
 
   <!-- QR view -->
   <div id="view-qr" class="view">
     <div class="qr-view">
-      <div class="qr-caption-main">Scan to save contact</div>
+      <div class="qr-caption-main">Scan to open card</div>
       <div class="qr-frame">
         <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=230x230&color=00e87a&bgcolor=060c09&qzone=2&data=BEGIN%3AVCARD%0D%0AVERSION%3A3.0%0D%0AN%3AAfridi%3BHaseeb%3B%3B%3B%0D%0AFN%3AHaseeb+Afridi%0D%0ATITLE%3ASolutions+Consultant%0D%0ATEL%3BTYPE%3DCELL%2CVOICE%3A%2B16478252498%0D%0AEMAIL%3BTYPE%3DINTERNET%3Aafridihaseeb98%40gmail.com%0D%0AURL%3Ahttps%3A%2F%2Fca.linkedin.com%2Fin%2Fhaseebafridi%0D%0AEND%3AVCARD"
-          alt="QR Code — Haseeb Afridi contact card"
+          src="https://api.qrserver.com/v1/create-qr-code/?size=230x230&color=00e87a&bgcolor=060c09&qzone=2&data=https%3A%2F%2Fhsa1998.github.io"
+          alt="QR Code linking to hsa1998.github.io"
           width="230"
           height="230"
         />
       </div>
       <div class="qr-sub">
-        Scans directly into your phone's contacts.<br>
-        Works with iOS &amp; Android camera apps.
+        Scan to open this card on any device.<br>
+        Then tap <strong style="color:var(--accent);font-weight:500">Add to Contacts</strong> to save directly.
       </div>
     </div>
   </div>
@@ -379,6 +421,40 @@
     document.getElementById('view-qr').classList.toggle('active', view === 'qr');
     document.getElementById('btn-card').className = 'tab-btn ' + (view === 'card' ? 'active' : 'inactive');
     document.getElementById('btn-qr').className   = 'tab-btn ' + (view === 'qr'   ? 'active' : 'inactive');
+  }
+
+  function saveContact(e) {
+    // Ripple effect
+    const btn = e.currentTarget;
+    const ring = document.createElement('span');
+    ring.className = 'ripple-ring';
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height) * 2;
+    ring.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+    btn.appendChild(ring);
+    setTimeout(() => ring.remove(), 600);
+
+    // Build and download vCard
+    const vcf = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      'N:Afridi;Haseeb;;;',
+      'FN:Haseeb Afridi',
+      'TITLE:Solutions Consultant',
+      'TEL;TYPE=CELL,VOICE:+16478252498',
+      'EMAIL;TYPE=INTERNET:afridihaseeb98@gmail.com',
+      'URL:https://ca.linkedin.com/in/haseebafridi',
+      'NOTE:Data Strategy. Software Architecture. Cloud. Automation. AI/ML.',
+      'END:VCARD'
+    ].join('\r\n');
+
+    const blob = new Blob([vcf], { type: 'text/vcard' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'Haseeb-Afridi.vcf';
+    a.click();
+    URL.revokeObjectURL(url);
   }
 </script>
 
